@@ -2,12 +2,9 @@ package com.tianlai.edusys.controller;
 import com.tianlai.edusys.exception.NoDataException;
 import com.tianlai.edusys.service.impl.TeacherServiceImpl;
 import com.tianlai.edusys.entity.Teacher;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tianlai.edusys.common.R;
 import com.tianlai.edusys.vo.PageVo;
 import com.tianlai.edusys.vo.TeacherQueryVo;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.PatternProperty;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -29,9 +24,12 @@ import java.util.List;
 @RequestMapping("/api")
 @Tag(name = "讲师控制器类", description = "TeacherController 讲师 后端数据接口")
 public class TeacherController {
-    @Autowired
-    private TeacherServiceImpl teacherService;
 
+    private final TeacherServiceImpl teacherService;
+    @Autowired
+    public TeacherController(TeacherServiceImpl teacherService) {
+        this.teacherService = teacherService;
+    }
 
     /**
      * 分页查询
