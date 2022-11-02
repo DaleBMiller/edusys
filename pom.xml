@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <modules>
+        <module>edusys-common</module>
+        <module>edusys-teacher</module>
+    </modules>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.13</version>
+<!--        当前没有写相对路径时，表示当前父项目的依赖从本地仓库获取-->
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.tianlai.edusysy</groupId>
+    <artifactId>edusys</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+
+    <properties>
+        <java.version>11</java.version>
+        <mysql-connector-java.version>8.0.30</mysql-connector-java.version>
+        <druid-spring-boot-starter.version>1.2.12</druid-spring-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.5.2</mybatis-plus-boot-starter.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>3.5.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

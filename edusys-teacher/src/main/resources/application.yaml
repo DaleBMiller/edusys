@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: @artifactId@ #占位符@...@
+
+  servlet:
+    multipart:
+      #启用文件上传。默认支持文件上传
+      enabled: true
+      # 文件大于该阈值时，将写入磁盘，支持KB/MB单位
+      file-size-threshold: 0
+      #自定义文件上传的临时路径
+      location: /tmp/
+      # 限制上传的多个文件的总大小
+      max-request-size: 100MB
+      # 限制单个文件的最大值
+      max-file-size: 10MB
+
+  profiles:
+    active: dev
+
+
+#配置异常拦截策略
+  mvc:
+    throw-exception-if-no-handler-found: true
+    #配置param方式的日期格式(date和1.8新日期api)
+    format:
+      date: yyyy-MM-dd
+      date-time: yyyy-MM-dd HH:mm:ss
+      time: HH:mm:ss
+  # SpringMVC不要为资源建立 /** 的映射配置，否则请求都被处理就没有404
+  web:
+    resources:
+      add-mappings: false
