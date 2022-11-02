@@ -11,6 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
   import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.NotEmpty;
 
 /**
  * @author Dale
@@ -30,6 +33,7 @@ public class Teacher extends baseEntity {
 
     @Schema(description = "讲师姓名")
     @TableField("name")
+    @NotEmpty(message = "讲师姓名{userinfo.notEmpty}")
     private String name;
 
     @Schema(description = "讲师简介")
@@ -42,6 +46,8 @@ public class Teacher extends baseEntity {
 
     @Schema(description = "头衔 1高级讲师 2首席讲师")
     @TableField("level")
+    @NotEmpty(message = "讲师等级{userinfo.notEmpty}")
+    @Range(min = 0,max = 4,message = "讲师等级{userinfo.level}" )
     private Integer level;
 
     @Schema(description = "讲师头像")

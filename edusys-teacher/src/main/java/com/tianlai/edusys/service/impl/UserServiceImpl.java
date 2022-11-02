@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     //获取加密算法对象
     private final PasswordEncoder passwordEncoder;
+
     //注入
     @Autowired
     public UserServiceImpl(PasswordEncoder passwordEncoder) {
@@ -58,5 +59,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //到这里代表用户名，密码都正确
         //返回结果对象
         return R.ok(user);
+    }
+
+    @Override
+    public R<User> register(User user) {
+        //加密密码
+        String encodePassword = passwordEncoder.encode(user.getPassword());
+        //设置加密后的密码
+        user.setPassword(encodePassword);
+        //注册新用户
+        int insert = baseMapper.insert(user);
+        if (!(insert > 0)) {
+            throw new ApplicationException(ResultCode.ACCOUNT_EXISTS_ERROR);
+        }
+        return R.ok("注册成功",user);
+    }
+
+    @Override
+    public R<User> updateUser(User user) {
+        //加密密码
+        String encodePassword = passwordEncoder.encode(user.getPassword());
+        //设置加密后的密码
+        user.setPassword(encodePassword);
+        //更新用户信息
+        int update = baseMapper.updateById(user);
+        if (!(update > 0)) {
+            throw new ApplicationException(ResultCode.SYSTEM_USERNAME_NOT_EXISTS);
+        }
+        return R.ok("修改成功",user);
+    }
+
+    @Override
+    public R<String> deleteUserById(Integer id) {
+        int deleteById = baseMapper.deleteById(id);
+        if (!(deleteById > 0)) {
+            throw new ApplicationException(ResultCode.SYSTEM_USERNAME_NOT_EXISTS);
+        }
+        return R.ok("删除成功");
     }
 }

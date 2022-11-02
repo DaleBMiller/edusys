@@ -11,6 +11,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
   import lombok.EqualsAndHashCode;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
  * @author Dale
@@ -30,10 +34,13 @@ public class User extends baseEntity {
 
     @Schema(description = "账户")
     @TableField("username")
+    @NotEmpty(message = "用户名{userinfo.notEmpty}")
     private String username;
 
     @Schema(description = "密码")
     @TableField("password")
+    @NotEmpty(message = "密码{userinfo.notEmpty}")
+    @Size(min = 6,max = 12,message = "{userinfo.password.size}")
     private String password;
 
     @Schema(description = "昵称")
@@ -46,6 +53,7 @@ public class User extends baseEntity {
 
     @Schema(description = "手机号码")
     @TableField("phone")
+    @Length(min = 13,max = 13,message = "{userinfo.phone.length}")
     private String phone;
 
     @Schema(description = "用户签名")

@@ -52,9 +52,9 @@
 
 
     <!--设置指定的包名下的日志等级-->
-    <logger name="com.xsj.edu" level="debug"/>
-    <!--<logger name="org.springframework" level="INFO" />-->
-    <!--<logger name="org.mybatis" level="INFO" />-->
+    <logger name="com.tianlai.edusys" level="debug"/>
+<!--    <logger name="org.springframework" level="debug" />-->
+    <logger name="org.mybatis" level="info" />
     <!--<logger name="org.thymeleaf" level="INFO" />-->
 
     <root level="info">

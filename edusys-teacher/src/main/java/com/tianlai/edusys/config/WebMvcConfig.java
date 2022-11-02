@@ -9,10 +9,12 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.tianlai.edusys.interceptor.LoginHandlerInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.text.SimpleDateFormat;
@@ -39,6 +41,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 
     @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        //注册自定义拦截器
+        registry.addInterceptor(new LoginHandlerInterceptor())
+                //设置拦截路径
+                .addPathPatterns("/**")
+                //设置排除资源路径
+                .excludePathPatterns("/api/login", "/api/captcha")
+                //为swagger设置排除
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v3/**", "/swagger-ui.html", "/swagger-ui/**", "/h5/**", "/mgr/**");
+    }
+
+    @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         // 这里不能直接创建新的MappingJackson2HttpMessageConverter对象添加，会影响swagger-ui使用
         for (HttpMessageConverter<?> converter : converters) {
@@ -63,6 +77,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 objectMapper.registerModule(javaTimeModule);
                 ((MappingJackson2HttpMessageConverter) converter).setObjectMapper(objectMapper);
             }
+        }
     }
-}
 }

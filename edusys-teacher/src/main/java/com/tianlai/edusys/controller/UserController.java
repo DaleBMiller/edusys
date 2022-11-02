@@ -1,17 +1,16 @@
 package com.tianlai.edusys.controller;
 
 import com.pig4cloud.captcha.ArithmeticCaptcha;
-import com.tianlai.edusys.common.ResultCode;
 import com.tianlai.edusys.exception.ApplicationException;
 import com.tianlai.edusys.service.impl.UserServiceImpl;
 import com.tianlai.edusys.entity.User;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tianlai.edusys.common.R;
 import com.tianlai.edusys.vo.LoginReqVo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,13 +30,17 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/api")
 @Tag(name = "用户控制器类", description = "UserController 用户 后端数据接口")
 public class UserController {
+    private final UserServiceImpl userService;
     @Autowired
-    private UserServiceImpl userService;
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
 
     /**
      * 获取验证码
+     *
      * @param request  拦截获取验证码请求
-     * @param response  响应验证码
+     * @param response 响应验证码
      * @throws Exception 异常
      */
     @Operation(summary = "验证码获取", description = "提供验证码")
@@ -62,12 +65,12 @@ public class UserController {
     /**
      * 登录
      *
-     * @param loginReqVo 用户登录vo户
+     * @param loginReqVo 用户登录vo
      * @return R
      */
     @Operation(summary = "用户登录", description = "用户登录功能")
     @PostMapping("/login")
-    public R<User> getUserPage(@RequestBody LoginReqVo loginReqVo, HttpSession session, HttpServletResponse response) {
+    public R<User> login(@RequestBody @Validated LoginReqVo loginReqVo, HttpSession session, HttpServletResponse response) {
         //校验验证码
         //从session获取验证码
         Object captcha = session.getAttribute("captcha");
@@ -84,7 +87,7 @@ public class UserController {
         R<User> userR = userService.login(loginReqVo);
         //到这里代表用户名，密码都正确
         //将用户保存到session当中
-        session.setAttribute("user",userR.getData());
+        session.setAttribute("user", userR.getData());
         //设置Cookie（记住我）
         //获取Cookie对象
         Cookie jsessionid = new Cookie("JSESSIONID", session.getId());
@@ -100,44 +103,34 @@ public class UserController {
         return userR;
     }
 
-
     /**
-     * 分页查询
+     * 登录
      *
-     * @param page 分页对象
-     * @param user 用户
+     * @param session 当前登录用户会话
      * @return R
      */
-    @Operation(summary = "分页查询", description = "分页查询")
-    @GetMapping("/page")
-    public R getUserPage(Page page, User user) {
-        return R.ok();
+    @Operation(summary = "用户登出", description = "用户登出功能")
+    @GetMapping("/logout")
+    public R<Object> logout(HttpSession session) {
+        // 直接让当前会话的session失效
+        session.invalidate();
+        // 返回消息
+        return R.ok().setMessage("退出成功");
     }
 
 
     /**
-     * 通过id查询 用户
+     * 注册
      *
-     * @param id id
-     * @return Result
+     * @param user 用户注册对象
+     * @return R
      */
-    @Operation(summary = "通过id查询", description = "通过id查询")
-    @GetMapping("/{id}")
-    public R getById(@PathVariable("id") Integer id) {
-        return R.ok();
+    @Operation(summary = "用户注册", description = "用户注册功能")
+    @RequestMapping("/register")
+    public R<User> register(@RequestBody @Validated User user) {
+        return userService.register(user);
     }
 
-    /**
-     * 新增 用户
-     *
-     * @param user 用户
-     * @return Result
-     */
-    @Operation(summary = "新增用户", description = "新增用户")
-    @PostMapping("")
-    public R save(@RequestBody User user) {
-        return R.ok();
-    }
 
     /**
      * 修改 用户
@@ -146,9 +139,9 @@ public class UserController {
      * @return Result
      */
     @Operation(summary = "修改用户", description = "修改用户")
-    @PutMapping("")
-    public R updateById(@RequestBody User user) {
-        return R.ok();
+    @PutMapping("/update")
+    public R<User> updateById(@RequestBody @Validated User user) {
+        return userService.updateUser(user);
     }
 
     /**
@@ -159,9 +152,9 @@ public class UserController {
      */
     @Operation(summary = "通过id删除用户",
             description = "通过id删除用户")
-    @DeleteMapping("/{id}")
-    public R removeById(@PathVariable Integer id) {
-        return R.ok();
+    @DeleteMapping("/delete/{id}")
+    public R<String> removeById(@PathVariable Integer id) {
+        return userService.deleteUserById(id);
     }
 
 }

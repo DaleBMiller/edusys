@@ -12,9 +12,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -68,7 +70,7 @@ public class TeacherController {
      */
     @Operation(summary = "新增讲师", description = "新增讲师")
     @PostMapping("/teacher")
-    public R<String> save(@RequestBody Teacher teacher) {
+    public R<String> save(@RequestBody @Validated Teacher teacher) {
         boolean save = teacherService.save(teacher);
         if (!save) {
             throw new NoDataException("添加失败");
@@ -83,7 +85,7 @@ public class TeacherController {
      */
     @Operation(summary = "修改讲师", description = "修改讲师")
     @PutMapping("/teacher")
-    public R<String> updateById(@RequestBody Teacher teacher) {
+    public R<String> updateById(@RequestBody @Validated Teacher teacher) {
         boolean update = teacherService.updateById(teacher);
         if (!update) {
             throw new NoDataException("修改失败");

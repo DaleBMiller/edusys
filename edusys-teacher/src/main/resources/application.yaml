@@ -15,6 +15,10 @@ spring:
       # 限制单个文件的最大值
       max-file-size: 10MB
 
+  #配置Validated的message编码格式
+  messages:
+    encoding: UTF-8
+
   profiles:
     active: dev
 

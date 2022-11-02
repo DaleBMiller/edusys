@@ -16,4 +16,10 @@ import com.tianlai.edusys.vo.LoginReqVo;
 public interface UserService extends IService<User> {
 
     R<User> login(LoginReqVo loginReqVo);
+
+    R<User> register(User user);
+
+    R<User> updateUser(User user);
+
+    R<String> deleteUserById(Integer id);
 }
